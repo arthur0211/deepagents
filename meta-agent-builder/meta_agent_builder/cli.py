@@ -255,8 +255,8 @@ Examples:
 
     elif args.command == "version":
         print("📦 Version Information\n")
-        print("  Meta-Agent Builder: 0.1.0-mvp")
-        print("  Status: MVP Complete")
+        print("  Meta-Agent Builder: 0.2.0")
+        print("  Status: Production Ready")
         print("  Specialists: 7")
         print("  Tools: 36")
         print("  Tests: 38 passing")
