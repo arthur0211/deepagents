@@ -4,10 +4,15 @@ import os
 from typing import Literal
 
 from langchain_core.tools import tool
-from tavily import TavilyClient
 
-# Initialize Tavily client
-tavily_client = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY", ""))
+# Try to import Tavily, but make it optional
+try:
+    from tavily import TavilyClient
+    tavily_client = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY", ""))
+    TAVILY_AVAILABLE = True
+except ImportError:
+    tavily_client = None
+    TAVILY_AVAILABLE = False
 
 
 @tool
@@ -38,6 +43,13 @@ def internet_search(
         >>> for result in results['results']:
         ...     print(result['title'], result['url'])
     """
+    if not TAVILY_AVAILABLE or tavily_client is None:
+        return {
+            "error": "Tavily not available",
+            "message": "Install tavily-python package and set TAVILY_API_KEY environment variable",
+            "results": [],
+        }
+
     try:
         results = tavily_client.search(
             query=query,
@@ -50,6 +62,7 @@ def internet_search(
         return {
             "error": f"Search failed: {str(e)}",
             "message": "Check TAVILY_API_KEY environment variable",
+            "results": [],
         }
 
 

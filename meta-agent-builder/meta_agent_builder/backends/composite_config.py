@@ -4,14 +4,18 @@ This module provides the CompositeBackend configuration with routing
 for different storage zones (memories, docs, templates, etc.).
 """
 
-from typing import Optional
+from typing import Callable, Optional
 
 from deepagents.backends import CompositeBackend, StateBackend, StoreBackend
+from deepagents.backends.protocol import BackendProtocol
 from langgraph.store.base import BaseStore
 
+# Type alias for backend factory
+BackendFactory = Callable[[any], BackendProtocol]
 
-def create_meta_agent_backend(store: Optional[BaseStore] = None) -> CompositeBackend:
-    """Create the composite backend for Meta-Agent Builder.
+
+def create_meta_agent_backend(store: Optional[BaseStore] = None) -> BackendFactory:
+    """Create the composite backend factory for Meta-Agent Builder.
 
     This backend routes different path prefixes to appropriate storage backends:
     - /memories/ -> StoreBackend (persistent knowledge base)
@@ -26,80 +30,90 @@ def create_meta_agent_backend(store: Optional[BaseStore] = None) -> CompositeBac
                If None, falls back to StateBackend for all routes.
 
     Returns:
-        CompositeBackend configured with appropriate routing.
+        BackendFactory that creates CompositeBackend with appropriate routing.
 
     Example:
         >>> from langgraph.store.memory import InMemoryStore
         >>> store = InMemoryStore()
-        >>> backend = create_meta_agent_backend(store)
-        >>> # Now use backend with create_deep_agent
+        >>> backend_factory = create_meta_agent_backend(store)
+        >>> # Now use backend_factory with create_deep_agent
     """
-    # Determine backends based on store availability
-    if store is not None:
-        memory_backend = StoreBackend()
-        docs_backend = StoreBackend()
-        templates_backend = StoreBackend()
-    else:
-        # Fallback to ephemeral storage if no store provided
-        memory_backend = StateBackend()
-        docs_backend = StateBackend()
-        templates_backend = StateBackend()
 
-    return CompositeBackend(
-        default=StateBackend(),  # Ephemeral default for scratch space
-        routes={
-            # Persistent knowledge base (agent learnings)
-            "/memories/": memory_backend,
-            # Cached documentation
-            "/docs/": docs_backend,
-            # Reusable project templates
-            "/templates/": templates_backend,
-            # Current project specifications (ephemeral)
-            "/project_specs/": StateBackend(),
-            # Validation artifacts (ephemeral)
-            "/validation/": StateBackend(),
-        },
-    )
+    def backend_factory(runtime) -> CompositeBackend:
+        """Create backend with runtime context."""
+        # Determine backends based on store availability
+        if store is not None:
+            memory_backend = StoreBackend(runtime)
+            docs_backend = StoreBackend(runtime)
+            templates_backend = StoreBackend(runtime)
+        else:
+            # Fallback to ephemeral storage if no store provided
+            memory_backend = StateBackend()
+            docs_backend = StateBackend()
+            templates_backend = StateBackend()
+
+        return CompositeBackend(
+            default=StateBackend(),  # Ephemeral default for scratch space
+            routes={
+                # Persistent knowledge base (agent learnings)
+                "/memories/": memory_backend,
+                # Cached documentation
+                "/docs/": docs_backend,
+                # Reusable project templates
+                "/templates/": templates_backend,
+                # Current project specifications (ephemeral)
+                "/project_specs/": StateBackend(),
+                # Validation artifacts (ephemeral)
+                "/validation/": StateBackend(),
+            },
+        )
+
+    return backend_factory
 
 
 def create_backend_with_sandbox(
     store: Optional[BaseStore] = None,
     sandbox_backend=None,
-) -> CompositeBackend:
-    """Create backend with optional sandbox for code execution.
+) -> BackendFactory:
+    """Create backend factory with optional sandbox for code execution.
 
     Args:
         store: Optional persistent store
         sandbox_backend: Optional SandboxBackend instance for code execution
 
     Returns:
-        CompositeBackend with sandbox as default if provided
+        BackendFactory that creates CompositeBackend with sandbox as default if provided
 
     Example:
         >>> from deepagents.backends.sandbox import SandboxBackend
         >>> sandbox = SandboxBackend()  # Your sandbox implementation
-        >>> backend = create_backend_with_sandbox(store, sandbox)
+        >>> backend_factory = create_backend_with_sandbox(store, sandbox)
     """
-    # Determine storage backends
-    if store is not None:
-        memory_backend = StoreBackend()
-        docs_backend = StoreBackend()
-        templates_backend = StoreBackend()
-    else:
-        memory_backend = StateBackend()
-        docs_backend = StateBackend()
-        templates_backend = StateBackend()
 
-    # Use sandbox as default if provided, otherwise StateBackend
-    default_backend = sandbox_backend if sandbox_backend is not None else StateBackend()
+    def backend_factory(runtime) -> CompositeBackend:
+        """Create backend with runtime context."""
+        # Determine storage backends
+        if store is not None:
+            memory_backend = StoreBackend(runtime)
+            docs_backend = StoreBackend(runtime)
+            templates_backend = StoreBackend(runtime)
+        else:
+            memory_backend = StateBackend()
+            docs_backend = StateBackend()
+            templates_backend = StateBackend()
 
-    return CompositeBackend(
-        default=default_backend,
-        routes={
-            "/memories/": memory_backend,
-            "/docs/": docs_backend,
-            "/templates/": templates_backend,
-            "/project_specs/": StateBackend(),
-            "/validation/": StateBackend(),
-        },
-    )
+        # Use sandbox as default if provided, otherwise StateBackend
+        default_backend = sandbox_backend if sandbox_backend is not None else StateBackend()
+
+        return CompositeBackend(
+            default=default_backend,
+            routes={
+                "/memories/": memory_backend,
+                "/docs/": docs_backend,
+                "/templates/": templates_backend,
+                "/project_specs/": StateBackend(),
+                "/validation/": StateBackend(),
+            },
+        )
+
+    return backend_factory
