@@ -1,7 +1,13 @@
-"""Meta-Agent Builder - MVP Example
+"""Meta-Agent Builder - Complete System Example
 
-This example demonstrates the Meta-Agent Builder system with
-Documentation and Architecture specialists.
+This example demonstrates the Meta-Agent Builder system with all 7 specialists:
+- Documentation Specialist
+- Architecture Specialist
+- PRD Specialist
+- Context Engineering Specialist
+- Middleware Specialist
+- Orchestration Specialist
+- Implementation Specialist
 
 Requirements:
 - pip install -r requirements.txt
@@ -73,10 +79,16 @@ async def main():
     print("\n✅ Specification generation complete!")
     print("\nGenerated specifications are in the virtual filesystem:")
     print("- /project_specs/project_brief.md")
+    print("- /project_specs/executive_summary.md")
     print("- /project_specs/architecture/architecture.md")
     print("- /project_specs/architecture/agents_hierarchy.md")
     print("- /project_specs/architecture/data_flows.md")
-    print("- /project_specs/executive_summary.md")
+    print("- /project_specs/architecture/backend_strategy.md")
+    print("- /project_specs/prd.md")
+    print("- /project_specs/context_engineering.md")
+    print("- /project_specs/middleware_specification.md")
+    print("- /project_specs/orchestration_specification.md")
+    print("- /project_specs/implementation_guide.md")
     print("\n" + "=" * 80 + "\n")
 
 

@@ -51,8 +51,33 @@ cp .env.template .env
 ### Run Example
 
 ```bash
-# Coming soon: CLI interface
-python -m meta_agent_builder generate "Your project description"
+# Set environment variables
+export ANTHROPIC_API_KEY='your-key-here'
+export TAVILY_API_KEY='your-key-here'  # Optional
+
+# Run the complete example with all 7 specialists
+python examples/mvp_example.py
+```
+
+Or use programmatically:
+
+```python
+import asyncio
+from meta_agent_builder.orchestrator import MetaOrchestrator
+
+async def main():
+    orchestrator = MetaOrchestrator()
+
+    user_request = """
+    Create a research agent system that searches the web,
+    analyzes findings, and generates comprehensive reports.
+    """
+
+    async for event in orchestrator.process_project_request(user_request):
+        if "messages" in event:
+            print(event["messages"][-1].content)
+
+asyncio.run(main())
 ```
 
 ---
@@ -103,29 +128,33 @@ meta-agent-builder/
 
 ## 🔧 Implementation Status
 
-### ✅ Completed
+### ✅ Completed (MVP)
 
 - [x] Project structure
-- [x] Backend configuration (CompositeBackend)
+- [x] Backend configuration (CompositeBackend with routing)
 - [x] Base specialist class
-- [x] Documentation tools
-- [x] Architecture tools
-- [x] Configuration files
-
-### 🚧 In Progress
-
-- [ ] Documentation Specialist implementation
-- [ ] Architecture Specialist implementation
-- [ ] Meta-Orchestrator
+- [x] All 7 specialist agents implemented:
+  - [x] Documentation Specialist (with internet search, code extraction, summarization)
+  - [x] Architecture Specialist (with Mermaid diagrams, hierarchy validation, middleware suggestions)
+  - [x] PRD Specialist (with requirements analysis, personas, acceptance criteria, metrics)
+  - [x] Context Engineering Specialist (with prompt design, state management, memory strategies)
+  - [x] Middleware Specialist (with middleware configuration, stack planning, optimization)
+  - [x] Orchestration Specialist (with workflow patterns, coordination, error handling)
+  - [x] Implementation Specialist (with code templates, project structure, implementation guides)
+- [x] Meta-Orchestrator with all 7 specialists
+- [x] 37 custom tools across all domains
+- [x] Complete system prompts for all agents
+- [x] Working end-to-end example
+- [x] Comprehensive documentation
 
 ### 📋 Planned
 
-- [ ] Remaining 5 specialists
-- [ ] Custom middleware
+- [ ] Custom middleware (ValidationMiddleware, ProgressTrackingMiddleware)
 - [ ] CLI interface
 - [ ] Validation pipeline
 - [ ] Test suite
 - [ ] Template library
+- [ ] Performance optimizations
 
 ---
 
@@ -213,6 +242,8 @@ To contribute:
 
 ---
 
-**Status:** 🚧 Active Development
-**Version:** 0.1.0
+**Status:** ✅ MVP Complete - Ready for Testing
+**Version:** 0.1.0-mvp
 **Last Updated:** 2025-11-16
+
+All 7 specialists implemented and integrated. System generates complete project specifications from natural language descriptions.

@@ -12,7 +12,12 @@ from langgraph.store.memory import InMemoryStore
 from meta_agent_builder.backends import create_meta_agent_backend
 from meta_agent_builder.specialists import (
     ArchitectureSpecialist,
+    ContextSpecialist,
     DocumentationSpecialist,
+    ImplementationSpecialist,
+    MiddlewareSpecialist,
+    OrchestrationSpecialist,
+    PRDSpecialist,
 )
 
 
@@ -73,6 +78,11 @@ class MetaOrchestrator:
         return [
             DocumentationSpecialist(),
             ArchitectureSpecialist(),
+            PRDSpecialist(),
+            ContextSpecialist(),
+            MiddlewareSpecialist(),
+            OrchestrationSpecialist(),
+            ImplementationSpecialist(),
         ]
 
     def _load_system_prompt(self) -> str:
@@ -122,9 +132,14 @@ class MetaOrchestrator:
         # For now, return structure
         return {
             "project_brief": "/project_specs/project_brief.md",
+            "executive_summary": "/project_specs/executive_summary.md",
             "architecture": "/project_specs/architecture/architecture.md",
             "agents_hierarchy": "/project_specs/architecture/agents_hierarchy.md",
             "data_flows": "/project_specs/architecture/data_flows.md",
             "backend_strategy": "/project_specs/architecture/backend_strategy.md",
-            "executive_summary": "/project_specs/executive_summary.md",
+            "prd": "/project_specs/prd.md",
+            "context_engineering": "/project_specs/context_engineering.md",
+            "middleware_specification": "/project_specs/middleware_specification.md",
+            "orchestration_specification": "/project_specs/orchestration_specification.md",
+            "implementation_guide": "/project_specs/implementation_guide.md",
         }
