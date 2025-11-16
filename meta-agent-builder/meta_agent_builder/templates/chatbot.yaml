@@ -1,0 +1,95 @@
+# Conversational Chatbot Template
+# An intelligent chatbot with context awareness and multi-turn conversations
+
+name: "intelligent-chatbot"
+description: "Context-aware chatbot with memory and personality"
+
+project_type: "conversational_assistant"
+complexity: "low-medium"
+
+agents:
+  - name: "conversation-manager"
+    type: "orchestrator"
+    description: "Manages conversation flow and context"
+    capabilities:
+      - Conversation state management
+      - Context tracking
+      - Intent recognition
+    middleware:
+      - FilesystemMiddleware
+      - AgentMemoryMiddleware  # Learns from conversations
+      - SummarizationMiddleware
+
+  - name: "response-generator"
+    type: "specialist"
+    description: "Generates contextual responses"
+    capabilities:
+      - Natural language generation
+      - Tone adaptation
+      - Persona consistency
+    tools:
+      - generate_response
+      - adapt_tone
+      - check_consistency
+
+  - name: "knowledge-retriever"
+    type: "specialist"
+    description: "Retrieves relevant knowledge for responses"
+    capabilities:
+      - Information retrieval
+      - Context search
+      - Fact verification
+    tools:
+      - search_knowledge_base
+      - retrieve_context
+      - verify_facts
+
+architecture:
+  pattern: "orchestrator-specialists"
+  coordination: "dynamic"
+  data_flow:
+    - User message received
+    - conversation-manager analyzes intent
+    - knowledge-retriever finds relevant info
+    - response-generator creates response
+    - conversation-manager manages context
+
+backend:
+  type: "composite"
+  routes:
+    "/conversations/": "StateBackend"     # Current session
+    "/memory/": "StoreBackend"            # Long-term memory
+    "/knowledge/": "StoreBackend"         # Knowledge base
+
+features:
+  - Multi-turn conversations
+  - Context awareness
+  - Personality customization
+  - Learning from interactions
+  - Knowledge base integration
+
+use_cases:
+  - "Customer support"
+  - "Virtual assistant"
+  - "Educational tutor"
+  - "Information desk"
+  - "Personal companion"
+
+estimated_complexity:
+  development_time: "3-5 days"
+  lines_of_code: "400-600"
+  specialist_count: 2
+  tool_count: 6
+
+customization:
+  personality:
+    - "Professional"
+    - "Friendly"
+    - "Casual"
+    - "Expert"
+
+  knowledge_sources:
+    - "Custom knowledge base"
+    - "Documentation"
+    - "FAQ database"
+    - "Web search"

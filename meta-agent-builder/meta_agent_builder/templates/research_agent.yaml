@@ -1,0 +1,95 @@
+# Research Agent Template
+# A multi-agent system for web research, analysis, and report generation
+
+name: "research-agent-system"
+description: "Multi-agent system for conducting web research and generating comprehensive reports"
+
+project_type: "research_assistant"
+complexity: "medium"
+
+agents:
+  - name: "research-coordinator"
+    type: "orchestrator"
+    description: "Coordinates research specialists and synthesizes findings"
+    capabilities:
+      - Task planning and decomposition
+      - Specialist coordination
+      - Result synthesis
+    middleware:
+      - TodoListMiddleware
+      - FilesystemMiddleware
+      - SubAgentMiddleware
+      - SummarizationMiddleware
+
+  - name: "web-search-specialist"
+    type: "specialist"
+    description: "Expert in web search and information retrieval"
+    capabilities:
+      - Web search
+      - Source evaluation
+      - Content extraction
+    tools:
+      - internet_search
+      - extract_content
+      - evaluate_source_credibility
+
+  - name: "analysis-specialist"
+    type: "specialist"
+    description: "Expert in analyzing and synthesizing information"
+    capabilities:
+      - Data analysis
+      - Pattern recognition
+      - Insight extraction
+    tools:
+      - analyze_content
+      - find_patterns
+      - extract_insights
+
+  - name: "report-writer"
+    type: "specialist"
+    description: "Expert in creating comprehensive research reports"
+    capabilities:
+      - Report structuring
+      - Content organization
+      - Citations management
+    tools:
+      - create_report_outline
+      - organize_content
+      - format_citations
+
+architecture:
+  pattern: "orchestrator-specialists"
+  coordination: "sequential-with-synthesis"
+  data_flow:
+    - coordinator receives query
+    - web-search-specialist finds sources
+    - analysis-specialist analyzes findings
+    - report-writer creates report
+    - coordinator synthesizes final output
+
+backend:
+  type: "composite"
+  routes:
+    "/research/": "StoreBackend"  # Persistent research cache
+    "/reports/": "StateBackend"    # Current report
+    "/sources/": "StoreBackend"    # Source cache
+
+features:
+  - Multi-source web research
+  - Source credibility evaluation
+  - Automatic report generation
+  - Citation management
+  - Research history tracking
+
+use_cases:
+  - "Academic research"
+  - "Market research"
+  - "Competitive analysis"
+  - "Literature reviews"
+  - "Fact-checking"
+
+estimated_complexity:
+  development_time: "1-2 weeks"
+  lines_of_code: "800-1200"
+  specialist_count: 3
+  tool_count: 9

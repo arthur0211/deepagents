@@ -1,0 +1,115 @@
+# Code Assistant Template
+# An AI coding assistant for code generation, review, and refactoring
+
+name: "ai-code-assistant"
+description: "Multi-agent system for code generation, review, and optimization"
+
+project_type: "development_assistant"
+complexity: "medium-high"
+
+agents:
+  - name: "dev-coordinator"
+    type: "orchestrator"
+    description: "Coordinates coding tasks and manages workflow"
+    capabilities:
+      - Task decomposition
+      - Code workflow management
+      - Quality assurance coordination
+    middleware:
+      - TodoListMiddleware
+      - FilesystemMiddleware
+      - SubAgentMiddleware
+      - SandboxMiddleware  # For code execution
+
+  - name: "code-generator"
+    type: "specialist"
+    description: "Generates code based on requirements"
+    capabilities:
+      - Code generation
+      - API integration
+      - Best practices application
+    tools:
+      - generate_code
+      - create_tests
+      - add_documentation
+
+  - name: "code-reviewer"
+    type: "specialist"
+    description: "Reviews code for quality and best practices"
+    capabilities:
+      - Code review
+      - Security analysis
+      - Performance analysis
+    tools:
+      - analyze_code
+      - check_security
+      - suggest_improvements
+
+  - name: "refactoring-specialist"
+    type: "specialist"
+    description: "Refactors and optimizes existing code"
+    capabilities:
+      - Code refactoring
+      - Performance optimization
+      - Technical debt reduction
+    tools:
+      - refactor_code
+      - optimize_performance
+      - modernize_code
+
+architecture:
+  pattern: "orchestrator-specialists"
+  coordination: "pipeline-with-feedback"
+  data_flow:
+    - User provides requirements
+    - code-generator creates initial code
+    - code-reviewer analyzes quality
+    - refactoring-specialist optimizes
+    - sandbox executes and validates
+    - coordinator delivers final code
+
+backend:
+  type: "composite"
+  routes:
+    "/code/": "SandboxBackend"        # Code execution
+    "/projects/": "StateBackend"      # Current project
+    "/patterns/": "StoreBackend"      # Code patterns library
+    "/reviews/": "StoreBackend"       # Review history
+
+features:
+  - Code generation from requirements
+  - Automated code review
+  - Refactoring suggestions
+  - Performance optimization
+  - Security analysis
+  - Test generation
+  - Documentation generation
+  - Code execution in sandbox
+
+use_cases:
+  - "Feature development"
+  - "Code review automation"
+  - "Legacy code modernization"
+  - "Performance optimization"
+  - "Security audits"
+  - "Test generation"
+
+estimated_complexity:
+  development_time: "2-3 weeks"
+  lines_of_code: "1200-1800"
+  specialist_count: 3
+  tool_count: 12
+
+languages_supported:
+  - "Python"
+  - "JavaScript"
+  - "TypeScript"
+  - "Java"
+  - "Go"
+
+quality_checks:
+  - "Syntax validation"
+  - "Security scanning"
+  - "Performance profiling"
+  - "Test coverage"
+  - "Documentation completeness"
