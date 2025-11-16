@@ -48,12 +48,12 @@ def create_meta_agent_backend(store: Optional[BaseStore] = None) -> BackendFacto
             templates_backend = StoreBackend(runtime)
         else:
             # Fallback to ephemeral storage if no store provided
-            memory_backend = StateBackend()
-            docs_backend = StateBackend()
-            templates_backend = StateBackend()
+            memory_backend = StateBackend(runtime)
+            docs_backend = StateBackend(runtime)
+            templates_backend = StateBackend(runtime)
 
         return CompositeBackend(
-            default=StateBackend(),  # Ephemeral default for scratch space
+            default=StateBackend(runtime),  # Ephemeral default for scratch space
             routes={
                 # Persistent knowledge base (agent learnings)
                 "/memories/": memory_backend,
@@ -62,9 +62,9 @@ def create_meta_agent_backend(store: Optional[BaseStore] = None) -> BackendFacto
                 # Reusable project templates
                 "/templates/": templates_backend,
                 # Current project specifications (ephemeral)
-                "/project_specs/": StateBackend(),
+                "/project_specs/": StateBackend(runtime),
                 # Validation artifacts (ephemeral)
-                "/validation/": StateBackend(),
+                "/validation/": StateBackend(runtime),
             },
         )
 
@@ -98,12 +98,12 @@ def create_backend_with_sandbox(
             docs_backend = StoreBackend(runtime)
             templates_backend = StoreBackend(runtime)
         else:
-            memory_backend = StateBackend()
-            docs_backend = StateBackend()
-            templates_backend = StateBackend()
+            memory_backend = StateBackend(runtime)
+            docs_backend = StateBackend(runtime)
+            templates_backend = StateBackend(runtime)
 
         # Use sandbox as default if provided, otherwise StateBackend
-        default_backend = sandbox_backend if sandbox_backend is not None else StateBackend()
+        default_backend = sandbox_backend if sandbox_backend is not None else StateBackend(runtime)
 
         return CompositeBackend(
             default=default_backend,
@@ -111,8 +111,8 @@ def create_backend_with_sandbox(
                 "/memories/": memory_backend,
                 "/docs/": docs_backend,
                 "/templates/": templates_backend,
-                "/project_specs/": StateBackend(),
-                "/validation/": StateBackend(),
+                "/project_specs/": StateBackend(runtime),
+                "/validation/": StateBackend(runtime),
             },
         )
 

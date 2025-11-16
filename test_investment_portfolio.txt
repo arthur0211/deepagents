@@ -1,0 +1,14 @@
+Vamos criar uma aplicação de Deep Agents para o time de research de uma consultoria de investimento.
+
+O objetivo é que ao informar os ativos da carteira de um cliente esse time de Deep Agents seja capaz de avaliar todos os ativos e fazer um relatório detalhado dos principais riscos que o cliente está correndo, ativos que estão fora do perfil dele ou não estão aderentes ao restante do portfolio, ativos que tem grande risco ou chance de dar dor de cabeça, etc.
+
+Requisitos Detalhados:
+- Sistema deve receber lista de ativos da carteira do cliente (ações, bonds, fundos, etc)
+- Sistema deve também receber o perfil de risco do cliente (conservador, moderado, arrojado)
+- Precisa analisar cada ativo individualmente quanto a: risco, volatilidade, liquidez, fundamentos
+- Precisa analisar a carteira como um todo quanto a: diversificação, concentração, correlação entre ativos
+- Deve identificar ativos que estão fora do perfil do cliente
+- Deve identificar riscos específicos e potenciais problemas
+- Deve gerar relatório completo e detalhado com recomendações
+- Deve ser capaz de buscar dados de mercado em tempo real
+- Deve ter memória do histórico de análises anteriores do cliente
